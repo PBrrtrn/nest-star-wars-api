@@ -21,8 +21,8 @@ describe("Planet", () => {
 
         server = app.getHttpServer()
 
-        const repository = moduleFixture.get<PlanetRepository>(PlanetRepository);
-        populateRepository(repository);
+        const planetService = moduleFixture.get<PlanetRepository>(PlanetRepository);
+        populatePlanets(planetService);
     });
 
     afterAll(async () => {
@@ -72,10 +72,10 @@ describe("Planet", () => {
     })
 });
 
-const populateRepository = function(repository: PlanetRepository) {
+const populatePlanets = function(planetService: PlanetRepository) {
     const tatooineCoordinates = new Coordinates(30.0, 30.0);
     const tatooine = new Planet(0, "Tatooine", 3000, "Arid", "Desert", tatooineCoordinates);
-    repository.insert(tatooine);
+    planetService.insert(tatooine);
 }
 
 const expectPlanetsQuery = async function(app: INestApplication, expectedPlanets: Object[]) {

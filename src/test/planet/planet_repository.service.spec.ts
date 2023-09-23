@@ -1,31 +1,40 @@
+import { Test, TestingModule } from "@nestjs/testing";
 import { Coordinates } from "../../coordinates/coordinates.model";
 import { Planet } from "../../planet/planet.model";
 import { PlanetRepository } from "../../planet/planet_repository.service";
 import { Fixtures } from "../fixtures";
+import { PLANET_DATA_STORAGE, InMemoryPlanetDataStorage } from "../../planet/planet_data_storage.service";
 
 describe("Planet repository", () => {
-    const planetRepository = new PlanetRepository();
+    let planetRepository: PlanetRepository;
 
-    beforeEach(() => {
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [
+                PlanetRepository,
+                {
+                    useClass: InMemoryPlanetDataStorage,
+                    provide: PLANET_DATA_STORAGE
+                }
+            ]
+        }).compile();
+
+        planetRepository = module.get<PlanetRepository>(PlanetRepository);
         planetRepository.clear();
     });
 
-    test("Can add a planet", () => {
-        const naboo = Fixtures.naboo();
-        naboo.id = 0;
-        planetRepository.insert(naboo);
-        expect(planetRepository.getAll()).toStrictEqual([naboo]);
+    it("Can add a planet", () => {
+        const tatooine = Fixtures.tatooine();
+        planetRepository.insert(tatooine);
+        expect(planetRepository.getAll()).toStrictEqual([tatooine]);
     });
 
-    test("Can get all planets", () => {
+    it("Can get all planets", () => {
         populateRepository(planetRepository);
-
-        const naboo = Fixtures.naboo();
-        naboo.id = 0;
         const tatooine = Fixtures.tatooine();
-        tatooine.id = 1;
+        const naboo = Fixtures.naboo();
 
-        expect(planetRepository.getAll()).toStrictEqual([naboo, tatooine]);
+        expect(planetRepository.getAll()).toStrictEqual([tatooine, naboo]);
     });
 
     /*
@@ -57,8 +66,8 @@ describe("Planet repository", () => {
 });
 
 const populateRepository = function(planetRepository: PlanetRepository) {
-    const naboo = Fixtures.naboo();
     const tatooine = Fixtures.tatooine();
-    planetRepository.insert(naboo);
+    const naboo = Fixtures.naboo();
     planetRepository.insert(tatooine);
+    planetRepository.insert(naboo);
 }

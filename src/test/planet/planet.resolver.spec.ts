@@ -3,16 +3,24 @@ import { PlanetResolver } from "../../planet/planet.resolver";
 import { PlanetRepository } from "../../planet/planet_repository.service";
 import { Planet } from "../../planet/planet.model";
 import { Coordinates } from "../../coordinates/coordinates.model";
+import { InMemoryPlanetDataStorage, PLANET_DATA_STORAGE } from "../../planet/planet_data_storage.service";
 
 describe("Planet resolver", () => {
     let planetResolver: PlanetResolver;
     beforeEach( async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [PlanetResolver, PlanetRepository]
+            providers: [
+                PlanetResolver,
+                PlanetRepository,
+                {
+                    useClass: InMemoryPlanetDataStorage,
+                    provide: PLANET_DATA_STORAGE
+                }
+            ]
         }).compile();
 
-        const planetRepository: PlanetRepository = module.get<PlanetRepository>(PlanetRepository);
-        planetRepository.clear();
+        const planetService: PlanetRepository = module.get<PlanetRepository>(PlanetRepository);
+        planetService.clear();
 
         planetResolver = module.get<PlanetResolver>(PlanetResolver);
     })

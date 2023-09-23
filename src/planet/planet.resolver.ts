@@ -1,14 +1,11 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Planet } from "../planet/planet.model";
-import { Inject } from "@nestjs/common";
 import { PlanetRepository } from "./planet_repository.service";
 import { Coordinates } from "../coordinates/coordinates.model";
 
 @Resolver((of: Planet) => Planet)
 export class PlanetResolver {
-    constructor(
-        @Inject(PlanetRepository) private planetRepository: PlanetRepository
-    ) {}
+    constructor(private planetRepository: PlanetRepository) {}
 
     @Query(() => [Planet])
     planets(): Planet[] {
