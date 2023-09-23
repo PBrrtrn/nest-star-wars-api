@@ -1,25 +1,25 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { Coordinates } from "../../coordinates/coordinates.model";
 import { Planet } from "../../planet/planet.model";
-import { PlanetRepository } from "../../planet/planet_repository.service";
+import { PlanetService, PLANET_REPOSITORY } from "../../planet/planet_service.service";
 import { Fixtures } from "../fixtures";
-import { PLANET_DATA_STORAGE, InMemoryPlanetDataStorage } from "../../planet/planet_data_storage.service";
+import { InMemoryPlanetRepository } from "../../planet/planet_repository.service";
 
 describe("Planet repository", () => {
-    let planetRepository: PlanetRepository;
+    let planetRepository: PlanetService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                PlanetRepository,
+                PlanetService,
                 {
-                    useClass: InMemoryPlanetDataStorage,
-                    provide: PLANET_DATA_STORAGE
+                    useClass: InMemoryPlanetRepository,
+                    provide: PLANET_REPOSITORY
                 }
             ]
         }).compile();
 
-        planetRepository = module.get<PlanetRepository>(PlanetRepository);
+        planetRepository = module.get<PlanetService>(PlanetService);
         planetRepository.clear();
     });
 
@@ -65,7 +65,7 @@ describe("Planet repository", () => {
     */
 });
 
-const populateRepository = function(planetRepository: PlanetRepository) {
+const populateRepository = function(planetRepository: PlanetService) {
     const tatooine = Fixtures.tatooine();
     const naboo = Fixtures.naboo();
     planetRepository.insert(tatooine);

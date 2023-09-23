@@ -1,9 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PlanetResolver } from "../../planet/planet.resolver";
-import { PlanetRepository } from "../../planet/planet_repository.service";
+import { PLANET_REPOSITORY, PlanetService } from "../../planet/planet_service.service";
 import { Planet } from "../../planet/planet.model";
 import { Coordinates } from "../../coordinates/coordinates.model";
-import { InMemoryPlanetDataStorage, PLANET_DATA_STORAGE } from "../../planet/planet_data_storage.service";
+import { InMemoryPlanetRepository } from "../../planet/planet_repository.service";
 
 describe("Planet resolver", () => {
     let planetResolver: PlanetResolver;
@@ -11,15 +11,15 @@ describe("Planet resolver", () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 PlanetResolver,
-                PlanetRepository,
+                PlanetService,
                 {
-                    useClass: InMemoryPlanetDataStorage,
-                    provide: PLANET_DATA_STORAGE
+                    useClass: InMemoryPlanetRepository,
+                    provide: PLANET_REPOSITORY
                 }
             ]
         }).compile();
 
-        const planetService: PlanetRepository = module.get<PlanetRepository>(PlanetRepository);
+        const planetService: PlanetService = module.get<PlanetService>(PlanetService);
         planetService.clear();
 
         planetResolver = module.get<PlanetResolver>(PlanetResolver);

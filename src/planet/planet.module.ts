@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 
-import { PlanetRepository } from './planet_repository.service';
+import { PlanetService, PLANET_REPOSITORY } from './planet_service.service';
 import { PlanetResolver } from './planet.resolver';
-import { InMemoryPlanetDataStorage, PLANET_DATA_STORAGE } from './planet_data_storage.service';
+import { InMemoryPlanetRepository } from './planet_repository.service';
 
 @Module({
     imports: [],
     providers: [
         PlanetResolver,
-        PlanetRepository,
+        PlanetService,
         {
-            provide: PLANET_DATA_STORAGE,
-            useClass: InMemoryPlanetDataStorage
+            provide: PLANET_REPOSITORY,
+            useClass: InMemoryPlanetRepository
         }
     ]
 })

@@ -1,20 +1,31 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Planet } from "./planet.model";
-import { PLANET_DATA_STORAGE, IPlanetDataStorage } from "./planet_data_storage.service";
+
+export interface IPlanetRepository {
+    getAll(): Planet[];
+    insert(planet: Planet): Planet;
+    clear(): void;
+}
 
 @Injectable()
-export class PlanetRepository {
-    constructor(@Inject(PLANET_DATA_STORAGE) private dataStorage: IPlanetDataStorage) {}
+export class InMemoryPlanetRepository implements IPlanetRepository {
+    private data: {[key: number]: Planet} = {};
+    private currentId = 0;
 
     public getAll(): Planet[] {
-        return this.dataStorage.getAll();
+        return Object.values(this.data);
     }
 
     public insert(planet: Planet): Planet {
-        return this.dataStorage.insert(planet);
+        planet.id = this.currentId;
+        this.data[this.currentId] = planet;
+        this.currentId++;
+        return planet;
     }
 
     public clear() {
-        this.dataStorage.clear();
+        // TODO: Raise exception if ENV is not test
+        this.data = {};
+        this.currentId = 0;
     }
 }

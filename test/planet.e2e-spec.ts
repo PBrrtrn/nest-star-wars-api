@@ -4,7 +4,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import request = require("supertest");
 
 import { AppModule } from "../src/app.module";
-import { PlanetRepository } from "../src/planet/planet_repository.service";
+import { PlanetService } from "../src/planet/planet_service.service";
 import { Planet } from "../src/planet/planet.model";
 import { Coordinates } from "../src/coordinates/coordinates.model";
 
@@ -21,7 +21,7 @@ describe("Planet", () => {
 
         server = app.getHttpServer()
 
-        const planetService = moduleFixture.get<PlanetRepository>(PlanetRepository);
+        const planetService = moduleFixture.get<PlanetService>(PlanetService);
         populatePlanets(planetService);
     });
 
@@ -72,7 +72,7 @@ describe("Planet", () => {
     })
 });
 
-const populatePlanets = function(planetService: PlanetRepository) {
+const populatePlanets = function(planetService: PlanetService) {
     const tatooineCoordinates = new Coordinates(30.0, 30.0);
     const tatooine = new Planet(0, "Tatooine", 3000, "Arid", "Desert", tatooineCoordinates);
     planetService.insert(tatooine);
