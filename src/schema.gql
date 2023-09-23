@@ -1,0 +1,25 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Coordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
+type Planet {
+  id: Float!
+  name: String!
+  population: Float!
+  climate: String!
+  terrain: String!
+  coordinates: Coordinates!
+}
+
+type Query {
+  planets: [Planet!]!
+}
+
+type Mutation {
+  createPlanet(name: String!, population: Float!, climate: String!, terrain: String!, latitude: Float!, longitude: Float!): Planet!
+}
