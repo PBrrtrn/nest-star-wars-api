@@ -24,4 +24,5 @@ type Query {
 type Mutation {
   createPlanet(name: String!, population: Float!, climate: String!, terrain: String!, latitude: Float!, longitude: Float!): Planet!
   updatePlanet(id: Float!, name: String, population: Float, climate: String, terrain: String, latitude: Float, longitude: Float): Planet!
+  deletePlanet(id: Float!): Planet!
 }

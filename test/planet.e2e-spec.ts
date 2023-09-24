@@ -30,30 +30,44 @@ describe("E2E", () => {
         server.close();
     });
 
+    const serializedTatooine = {
+        id: 0,
+        name: "Tatooine",
+        population: 3000,
+        climate: "Arid",
+        terrain: "Desert",
+        coordinates: {
+            latitude: 30.0,
+            longitude: 30.0
+        } 
+    }
+
     it("Can fetch all planets", async () => {
-        const expectedPlanets = [
-            { id: 0, name: "Tatooine", population: 3000, climate: "Arid", terrain: "Desert" }
-        ]
-        await expectPlanetsQuery(app, expectedPlanets)
+        await expectPlanetsQuery(app, [serializedTatooine])
     });
 
     it("Can fetch a planet by ID", async () => {
         await request(app.getHttpServer())
             .post("/")
-            .send({query: `query { planet(id: 0) { id name population climate terrain } }`})
+            .send({query: `query { planet(id: 0) { id name population climate terrain coordinates { latitude longitude } } }`})
             .expect(200)
             .expect(response => {
-                expect(response.body.data.planet).toStrictEqual({
-                    id: 0,
-                    name: "Tatooine",
-                    population: 3000,
-                    climate: "Arid",
-                    terrain: "Desert"
-                });
+                expect(response.body.data.planet).toStrictEqual(serializedTatooine);
             });
     });
 
     it("Can insert a planet", async () => {
+        const serializedNaboo = {
+            id: 1,
+            name: "Naboo",
+            population: 15000,
+            climate: "Temperate",
+            terrain: "Plains",
+            coordinates: {
+                latitude: -40.0,
+                longitude: 210.0
+            }
+        }
         await request(app.getHttpServer())
             .post("/")
             .send({query: `mutation {
@@ -65,26 +79,15 @@ describe("E2E", () => {
                     latitude: -40.0,
                     longitude: 210.0
                 ) {
-                    id name population climate terrain
+                    id name population climate terrain coordinates { latitude longitude }
                 }
             }`})
             .expect(200)
             .expect(response => {
-                expect(response.body.data.createPlanet).toStrictEqual({
-                    id: 1,
-                    name: "Naboo",
-                    population: 15000,
-                    climate: "Temperate",
-                    terrain: "Plains"
-                });
+                expect(response.body.data.createPlanet).toStrictEqual(serializedNaboo);
             });
 
-        const expectedPlanets = [
-            { id: 0, name: "Tatooine", population: 3000, climate: "Arid", terrain: "Desert" },
-            { id: 1, name: "Naboo", population: 15000, climate: "Temperate", terrain: "Plains" }
-        ]
-
-        await expectPlanetsQuery(app, expectedPlanets);
+        await expectPlanetsQuery(app, [serializedTatooine, serializedNaboo]);
     });
 
     it("Can update a planet by ID", async () => {
@@ -93,7 +96,11 @@ describe("E2E", () => {
             name: "Tatooine",
             population: 4000,
             climate: "Arid",
-            terrain: "Desert"
+            terrain: "Desert",
+            coordinates: {
+                latitude: 30.0,
+                longitude: 30.0
+            }
         };
 
         await request(app.getHttpServer())
@@ -103,7 +110,7 @@ describe("E2E", () => {
                     id: 0,
                     population: 4000
                 ) {
-                    id, name, population, climate, terrain
+                    id name population climate terrain coordinates { latitude longitude }
                 }
             }`})
             .expect(200)
@@ -112,6 +119,18 @@ describe("E2E", () => {
             });
         
         await expectPlanetsQuery(app, [expectedUpdatedPlanet]);
+    });
+
+    it("Can delete a planet by ID", async () => {
+        await request(app.getHttpServer())
+            .post("/")
+            .send({query: `mutation { deletePlanet(id: 0) { id, name, population, climate, terrain coordinates { latitude longitude } } }`})
+            .expect(200)
+            .expect(response => {
+                expect(response.body.data.deletePlanet).toStrictEqual(serializedTatooine);
+            });
+        
+        await expectPlanetsQuery(app, []);
     });
 });
 
@@ -124,7 +143,7 @@ const populatePlanets = function(planetService: PlanetService) {
 const expectPlanetsQuery = async function(app: INestApplication, expectedPlanets: Object[]) {
     await request(app.getHttpServer())
         .post("/")
-        .send({query: 'query { planets { id name population climate terrain } }'})
+        .send({query: 'query { planets { id name population climate terrain coordinates { latitude longitude } } }'})
         .expect(200)
         .expect((response) => {
             expect(response.body.data.planets).toStrictEqual(expectedPlanets);

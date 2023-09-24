@@ -4,17 +4,17 @@ import { Coordinates } from "../coordinates/coordinates.model";
 @ObjectType()
 export class Planet {
     @Field()
-    id: number
+    id: number;
     @Field()
-    name: string
+    name: string;
     @Field()
-    population: number
+    population: number;
     @Field()
-    climate: string
+    climate: string;
     @Field()
-    terrain: string
+    terrain: string;
     @Field()
-    coordinates: Coordinates
+    coordinates: Coordinates;
 
     constructor(
         id: number,
