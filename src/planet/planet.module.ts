@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 
 import { PlanetService, PLANET_REPOSITORY } from './planet_service.service';
 import { PlanetResolver } from './planet.resolver';
-import { InMemoryPlanetRepository } from './planet_repository.service';
+import { InMemoryRepository } from '../repository/repository.service';
+import { Planet } from './planet.model';
 
 @Module({
     imports: [],
@@ -11,7 +12,7 @@ import { InMemoryPlanetRepository } from './planet_repository.service';
         PlanetService,
         {
             provide: PLANET_REPOSITORY,
-            useClass: InMemoryPlanetRepository
+            useClass: InMemoryRepository<Planet>
         }
     ]
 })

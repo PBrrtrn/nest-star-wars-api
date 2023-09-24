@@ -3,8 +3,8 @@ import { PlanetResolver } from "../../planet/planet.resolver";
 import { PLANET_REPOSITORY, PlanetService } from "../../planet/planet_service.service";
 import { Planet } from "../../planet/planet.model";
 import { Coordinates } from "../../coordinates/coordinates.model";
-import { InMemoryPlanetRepository } from "../../planet/planet_repository.service";
 import { Fixtures } from "../fixtures";
+import { InMemoryRepository } from "../../repository/repository.service";
 
 describe("Planet resolver", () => {
     let planetResolver: PlanetResolver;
@@ -14,13 +14,13 @@ describe("Planet resolver", () => {
                 PlanetResolver,
                 PlanetService,
                 {
-                    useClass: InMemoryPlanetRepository,
+                    useClass: InMemoryRepository<Planet>,
                     provide: PLANET_REPOSITORY
                 }
             ]
         }).compile();
 
-        const planetRepository: InMemoryPlanetRepository = module.get<InMemoryPlanetRepository>(PLANET_REPOSITORY);
+        const planetRepository: InMemoryRepository<Planet> = module.get<InMemoryRepository<Planet>>(PLANET_REPOSITORY);
         planetRepository.clear();
         planetRepository.insert(Fixtures.tatooine());
         planetRepository.insert(new Planet(null, "Arrakis", 15000000, "Arid", "Desert", new Coordinates(-30.0, -30.0)));
