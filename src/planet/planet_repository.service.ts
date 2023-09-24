@@ -3,8 +3,10 @@ import { Planet } from "./planet.model";
 
 export interface IPlanetRepository {
     getAll(): Planet[];
+    get(id: number): Planet;
     insert(planet: Planet): Planet;
-    clear(): void;
+    update(id: number, planet: Planet): Planet;
+    delete(id: number): Planet
 }
 
 @Injectable()
@@ -16,6 +18,10 @@ export class InMemoryPlanetRepository implements IPlanetRepository {
         return Object.values(this.data);
     }
 
+    public get(id: number): Planet {
+        return this.data[id];
+    }
+
     public insert(planet: Planet): Planet {
         planet.id = this.currentId;
         this.data[this.currentId] = planet;
@@ -23,8 +29,19 @@ export class InMemoryPlanetRepository implements IPlanetRepository {
         return planet;
     }
 
+    public update(id: number, updatedPlanet: Planet): Planet {
+        updatedPlanet.id = id;
+        this.data[id] = updatedPlanet;
+        return updatedPlanet;
+    }
+
+    public delete(id: number): Planet {
+        const entity = this.data[id];
+        delete this.data[id];
+        return entity;
+    }
+
     public clear() {
-        // TODO: Raise exception if ENV is not test
         this.data = {};
         this.currentId = 0;
     }

@@ -4,6 +4,7 @@ import { PLANET_REPOSITORY, PlanetService } from "../../planet/planet_service.se
 import { Planet } from "../../planet/planet.model";
 import { Coordinates } from "../../coordinates/coordinates.model";
 import { InMemoryPlanetRepository } from "../../planet/planet_repository.service";
+import { Fixtures } from "../fixtures";
 
 describe("Planet resolver", () => {
     let planetResolver: PlanetResolver;
@@ -19,8 +20,10 @@ describe("Planet resolver", () => {
             ]
         }).compile();
 
-        const planetService: PlanetService = module.get<PlanetService>(PlanetService);
-        planetService.clear();
+        const planetRepository: InMemoryPlanetRepository = module.get<InMemoryPlanetRepository>(PLANET_REPOSITORY);
+        planetRepository.clear();
+        planetRepository.insert(Fixtures.tatooine());
+        planetRepository.insert(new Planet(null, "Arrakis", 15000000, "Arid", "Desert", new Coordinates(-30.0, -30.0)));
 
         planetResolver = module.get<PlanetResolver>(PlanetResolver);
     })
@@ -31,12 +34,32 @@ describe("Planet resolver", () => {
 
     it("Can fetch all planets", () => {
         const planets = planetResolver.planets();
-        expect(planets).toStrictEqual([]);
+        expect(planets).toStrictEqual([
+            Fixtures.tatooine(),
+            new Planet(1, "Arrakis", 15000000, "Arid", "Desert", new Coordinates(-30.0, -30.0))
+        ]);
     });
 
     it("Can create a planet", () => {
         const createdPlanet = planetResolver.createPlanet("Tatooine", 3000, "Arid", "Desert", 30.0, 30.0);
-        const expectedPlanet = new Planet(0, "Tatooine", 3000, "Arid", "Desert", new Coordinates(30.0, 30.0))
+        const expectedPlanet = new Planet(2, "Tatooine", 3000, "Arid", "Desert", new Coordinates(30.0, 30.0))
         expect(createdPlanet).toStrictEqual(expectedPlanet);
+    });
+
+    it("Can fetch a planet by ID", () => {
+        const expectedPlanet = new Planet(1, "Arrakis", 15000000, "Arid", "Desert", new Coordinates(-30.0, -30.0));
+        const planet = planetResolver.planet(1);
+        expect(planet).toStrictEqual(expectedPlanet);
+    });
+
+    it("Can update a planet", () => {
+        const updatedPlanet = planetResolver.updatePlanet(0, null, 4000, null, null, null, null);
+        const expectedPlanet = new Planet(0, "Tatooine", 4000, "Arid", "Desert", new Coordinates(30.0, 30.0));
+        expect(updatedPlanet).toStrictEqual(expectedPlanet);
+    });
+
+    it("Can delete a planet", () => {
+        const deletedPlanet = planetResolver.deletePlanet(0);
+        expect(deletedPlanet).toStrictEqual(Fixtures.tatooine());
     });
 });

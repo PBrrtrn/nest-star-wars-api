@@ -18,8 +18,10 @@ type Planet {
 
 type Query {
   planets: [Planet!]!
+  planet(id: Float!): Planet!
 }
 
 type Mutation {
   createPlanet(name: String!, population: Float!, climate: String!, terrain: String!, latitude: Float!, longitude: Float!): Planet!
+  updatePlanet(id: Float!, name: String, population: Float, climate: String, terrain: String, latitude: Float, longitude: Float): Planet!
 }

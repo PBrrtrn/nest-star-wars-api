@@ -5,11 +5,16 @@ import { Coordinates } from "../coordinates/coordinates.model";
 
 @Resolver((of: Planet) => Planet)
 export class PlanetResolver {
-    constructor(private planetRepository: PlanetService) {}
+    constructor(private planetService: PlanetService) {}
 
     @Query(() => [Planet])
     planets(): Planet[] {
-        return this.planetRepository.getAll();
+        return this.planetService.getAll();
+    }
+
+    @Query(() => Planet)
+    planet(@Args("id") id: number) {
+        return this.planetService.get(id);
     }
 
     @Mutation(() => Planet)
@@ -22,6 +27,41 @@ export class PlanetResolver {
         @Args("longitude") longitude: number
     ): Planet {
         const planet = new Planet(null, name, population, climate, terrain, new Coordinates(latitude, longitude));
-        return this.planetRepository.insert(planet);
+        return this.planetService.insert(planet);
+    }
+
+    @Mutation(() => Planet)
+    updatePlanet(
+        @Args("id") id: number,
+        @Args("name", { nullable: true }) name: string,
+        @Args("population", { nullable: true }) population: number,
+        @Args("climate", { nullable: true }) climate: string,
+        @Args("terrain", { nullable: true }) terrain: string,
+        @Args("latitude", { nullable: true }) latitude: number,
+        @Args("longitude", { nullable: true }) longitude: number
+    ): Planet {
+        const planet = this.planetService.get(id);
+        const planetCoordinates = planet.coordinates;
+
+        const coordinates = new Coordinates(
+            latitude || planetCoordinates.latitude,
+            longitude || planetCoordinates.longitude
+        );
+
+        const updatedPlanet = new Planet(
+            id,
+            name || planet.name,
+            population || planet.population,
+            climate || planet.climate,
+            terrain || planet.terrain,
+            coordinates
+        );
+
+        return this.planetService.update(id, updatedPlanet);
+    }
+
+    @Mutation(() => Planet)
+    deletePlanet(@Args("id") id: number): Planet {
+        return this.planetService.delete(id);
     }
 }

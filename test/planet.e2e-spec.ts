@@ -8,7 +8,7 @@ import { PlanetService } from "../src/planet/planet_service.service";
 import { Planet } from "../src/planet/planet.model";
 import { Coordinates } from "../src/coordinates/coordinates.model";
 
-describe("Planet", () => {
+describe("E2E", () => {
     let app: INestApplication;
     let server: any;
     beforeEach(async () => {
@@ -37,31 +37,47 @@ describe("Planet", () => {
         await expectPlanetsQuery(app, expectedPlanets)
     });
 
+    it("Can fetch a planet by ID", async () => {
+        await request(app.getHttpServer())
+            .post("/")
+            .send({query: `query { planet(id: 0) { id name population climate terrain } }`})
+            .expect(200)
+            .expect(response => {
+                expect(response.body.data.planet).toStrictEqual({
+                    id: 0,
+                    name: "Tatooine",
+                    population: 3000,
+                    climate: "Arid",
+                    terrain: "Desert"
+                });
+            });
+    });
+
     it("Can insert a planet", async () => {
         await request(app.getHttpServer())
-        .post("/")
-        .send({query: `mutation {
-            createPlanet(
-                name: "Naboo",
-                population: 15000,
-                climate: "Temperate",
-                terrain: "Plains",
-                latitude: -40.0,
-                longitude: 210.0
-            ) {
-                id name population climate terrain
-            }
-        }`})
-        .expect(200)
-        .expect(response => {
-            expect(response.body.data.createPlanet).toEqual({
-                id: 1,
-                name: "Naboo",
-                population: 15000,
-                climate: "Temperate",
-                terrain: "Plains"
+            .post("/")
+            .send({query: `mutation {
+                createPlanet(
+                    name: "Naboo",
+                    population: 15000,
+                    climate: "Temperate",
+                    terrain: "Plains",
+                    latitude: -40.0,
+                    longitude: 210.0
+                ) {
+                    id name population climate terrain
+                }
+            }`})
+            .expect(200)
+            .expect(response => {
+                expect(response.body.data.createPlanet).toStrictEqual({
+                    id: 1,
+                    name: "Naboo",
+                    population: 15000,
+                    climate: "Temperate",
+                    terrain: "Plains"
+                });
             });
-        });
 
         const expectedPlanets = [
             { id: 0, name: "Tatooine", population: 3000, climate: "Arid", terrain: "Desert" },
@@ -69,7 +85,34 @@ describe("Planet", () => {
         ]
 
         await expectPlanetsQuery(app, expectedPlanets);
-    })
+    });
+
+    it("Can update a planet by ID", async () => {
+        const expectedUpdatedPlanet = {
+            id: 0,
+            name: "Tatooine",
+            population: 4000,
+            climate: "Arid",
+            terrain: "Desert"
+        };
+
+        await request(app.getHttpServer())
+            .post("/")
+            .send({query: `mutation {
+                updatePlanet(
+                    id: 0,
+                    population: 4000
+                ) {
+                    id, name, population, climate, terrain
+                }
+            }`})
+            .expect(200)
+            .expect(response => {
+                expect(response.body.data.updatePlanet).toStrictEqual(expectedUpdatedPlanet);
+            });
+        
+        await expectPlanetsQuery(app, [expectedUpdatedPlanet]);
+    });
 });
 
 const populatePlanets = function(planetService: PlanetService) {

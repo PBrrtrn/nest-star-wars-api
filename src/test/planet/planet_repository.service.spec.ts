@@ -1,25 +1,12 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { Coordinates } from "../../coordinates/coordinates.model";
 import { Planet } from "../../planet/planet.model";
-import { PlanetService, PLANET_REPOSITORY } from "../../planet/planet_service.service";
 import { Fixtures } from "../fixtures";
 import { InMemoryPlanetRepository } from "../../planet/planet_repository.service";
 
-describe("Planet repository", () => {
-    let planetRepository: PlanetService;
-
+describe("In memory planet repository", () => {
+    const planetRepository = new InMemoryPlanetRepository();
     beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [
-                PlanetService,
-                {
-                    useClass: InMemoryPlanetRepository,
-                    provide: PLANET_REPOSITORY
-                }
-            ]
-        }).compile();
-
-        planetRepository = module.get<PlanetService>(PlanetService);
         planetRepository.clear();
     });
 
@@ -37,35 +24,30 @@ describe("Planet repository", () => {
         expect(planetRepository.getAll()).toStrictEqual([tatooine, naboo]);
     });
 
-    /*
-    test("Can get a planet by ID", () => {
+    it("Can get a planet by ID", () => {
         populateRepository(planetRepository);
 
-        const tatooine = Fixtures.tatooine();
-        tatooine.id = 1;
-
-        expect(planetRepository.get(1)).toStrictEqual(tatooine);
+        const naboo = Fixtures.naboo();
+        expect(planetRepository.get(1)).toStrictEqual(naboo);
     });
 
     test("Can update a planet by ID", () => {
         populateRepository(planetRepository);
-        const updatedPlanet = new Planet("Tatooine", 4000, "Arid", "Rocky", new Coordinates(30.0, 30.0), 0);
-        planetRepository.update(0, updatedPlanet);
-        expect(planetRepository.get(0)).toStrictEqual(updatedPlanet);
+        const updatedPlanet = new Planet(null, "Naboo", 40000, "Temperate", "Plains", new Coordinates(-40.0, 210.0));
+        planetRepository.update(1, updatedPlanet);
+        expect(planetRepository.get(1)).toStrictEqual(updatedPlanet);
     });
 
     test("Can delete a planet by ID", () => {
         populateRepository(planetRepository);
         planetRepository.delete(1);
 
-        const naboo = Fixtures.naboo();
-        naboo.id = 0;
-        expect(planetRepository.getAll()).toStrictEqual([naboo]);
+        const tatooine = Fixtures.tatooine();
+        expect(planetRepository.getAll()).toStrictEqual([tatooine]);
     });
-    */
 });
 
-const populateRepository = function(planetRepository: PlanetService) {
+const populateRepository = function(planetRepository: InMemoryPlanetRepository) {
     const tatooine = Fixtures.tatooine();
     const naboo = Fixtures.naboo();
     planetRepository.insert(tatooine);
