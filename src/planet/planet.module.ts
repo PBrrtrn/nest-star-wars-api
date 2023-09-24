@@ -10,10 +10,7 @@ import { Planet } from './planet.model';
     providers: [
         PlanetResolver,
         PlanetService,
-        {
-            provide: PLANET_REPOSITORY,
-            useClass: InMemoryRepository<Planet>
-        }
+        { provide: PLANET_REPOSITORY, useClass: InMemoryRepository<Planet> }
     ]
 })
 export class PlanetModule {}

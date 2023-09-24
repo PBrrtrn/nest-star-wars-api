@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Character } from "./character.model";
-import { ICharacterRepository } from "./character_repository.service";
+import { IRepository } from "../repository/repository.service";
 
 export const CHARACTER_REPOSITORY = "CHARACTER REPOSITORY";
 
 @Injectable()
-export class PlanetService {
-    constructor(@Inject(CHARACTER_REPOSITORY) private repository: ICharacterRepository) {}
+export class CharacterService {
+    constructor(@Inject(CHARACTER_REPOSITORY) private repository: IRepository<Character>) {}
 
     public getAll(): Character[] {
         return this.repository.getAll();

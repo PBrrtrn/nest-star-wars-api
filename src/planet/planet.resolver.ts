@@ -8,30 +8,30 @@ export class PlanetResolver {
     constructor(private planetService: PlanetService) {}
 
     @Query(() => [Planet])
-    planets(): Planet[] {
+    async planets(): Promise<Planet[]> {
         return this.planetService.getAll();
     }
 
     @Query(() => Planet)
-    planet(@Args("id") id: number) {
+    async planet(@Args("id") id: number): Promise<Planet> {
         return this.planetService.get(id);
     }
 
     @Mutation(() => Planet)
-    createPlanet(
+    async createPlanet(
         @Args("name") name: string,
         @Args("population") population: number,
         @Args("climate") climate: string,
         @Args("terrain") terrain: string,
         @Args("latitude") latitude: number,
         @Args("longitude") longitude: number
-    ): Planet {
+    ): Promise<Planet> {
         const planet = new Planet(null, name, population, climate, terrain, new Coordinates(latitude, longitude));
         return this.planetService.insert(planet);
     }
 
     @Mutation(() => Planet)
-    updatePlanet(
+    async updatePlanet(
         @Args("id") id: number,
         @Args("name", { nullable: true }) name: string,
         @Args("population", { nullable: true }) population: number,
@@ -39,7 +39,7 @@ export class PlanetResolver {
         @Args("terrain", { nullable: true }) terrain: string,
         @Args("latitude", { nullable: true }) latitude: number,
         @Args("longitude", { nullable: true }) longitude: number
-    ): Planet {
+    ): Promise<Planet> {
         const planet = this.planetService.get(id);
         const planetCoordinates = planet.coordinates;
 
@@ -61,7 +61,7 @@ export class PlanetResolver {
     }
 
     @Mutation(() => Planet)
-    deletePlanet(@Args("id") id: number): Planet {
+    async deletePlanet(@Args("id") id: number): Promise<Planet> {
         return this.planetService.delete(id);
     }
 }

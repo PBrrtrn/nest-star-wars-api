@@ -32,34 +32,34 @@ describe("Planet resolver", () => {
         expect(planetResolver).toBeDefined();
     });
 
-    it("Can fetch all planets", () => {
-        const planets = planetResolver.planets();
+    it("Can fetch all planets", async () => {
+        const planets = await planetResolver.planets();
         expect(planets).toStrictEqual([
             Fixtures.tatooine(),
             new Planet(1, "Arrakis", 15000000, "Arid", "Desert", new Coordinates(-30.0, -30.0))
         ]);
     });
 
-    it("Can create a planet", () => {
-        const createdPlanet = planetResolver.createPlanet("Tatooine", 3000, "Arid", "Desert", 30.0, 30.0);
+    it("Can fetch a planet by ID", async () => {
+        const expectedPlanet = new Planet(1, "Arrakis", 15000000, "Arid", "Desert", new Coordinates(-30.0, -30.0));
+        const planet = await planetResolver.planet(1);
+        expect(planet).toStrictEqual(expectedPlanet);
+    });
+
+    it("Can create a planet", async () => {
+        const createdPlanet = await planetResolver.createPlanet("Tatooine", 3000, "Arid", "Desert", 30.0, 30.0);
         const expectedPlanet = new Planet(2, "Tatooine", 3000, "Arid", "Desert", new Coordinates(30.0, 30.0))
         expect(createdPlanet).toStrictEqual(expectedPlanet);
     });
 
-    it("Can fetch a planet by ID", () => {
-        const expectedPlanet = new Planet(1, "Arrakis", 15000000, "Arid", "Desert", new Coordinates(-30.0, -30.0));
-        const planet = planetResolver.planet(1);
-        expect(planet).toStrictEqual(expectedPlanet);
-    });
-
-    it("Can update a planet", () => {
-        const updatedPlanet = planetResolver.updatePlanet(0, null, 4000, null, null, null, null);
+    it("Can update a planet", async () => {
+        const updatedPlanet = await planetResolver.updatePlanet(0, null, 4000, null, null, null, null);
         const expectedPlanet = new Planet(0, "Tatooine", 4000, "Arid", "Desert", new Coordinates(30.0, 30.0));
         expect(updatedPlanet).toStrictEqual(expectedPlanet);
     });
 
-    it("Can delete a planet", () => {
-        const deletedPlanet = planetResolver.deletePlanet(0);
+    it("Can delete a planet", async () => {
+        const deletedPlanet = await planetResolver.deletePlanet(0);
         expect(deletedPlanet).toStrictEqual(Fixtures.tatooine());
     });
 });
