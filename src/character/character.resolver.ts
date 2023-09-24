@@ -57,6 +57,6 @@ export class CharacterResolver {
 
     @ResolveField('currentLocation', () => Planet)
     async currentLocation(@Parent() character: Character): Promise<Planet> {
-        return this.planetService.get(character.id);
+        return character.currentLocation;
     }
 }
