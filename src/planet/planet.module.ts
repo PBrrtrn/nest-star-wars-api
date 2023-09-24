@@ -11,6 +11,10 @@ import { Planet } from './planet.model';
         PlanetResolver,
         PlanetService,
         { provide: PLANET_REPOSITORY, useClass: InMemoryRepository<Planet> }
+    ],
+    exports: [
+        PlanetResolver,
+        PlanetService
     ]
 })
 export class PlanetModule {}

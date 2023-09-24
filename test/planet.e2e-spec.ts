@@ -8,7 +8,7 @@ import { PlanetService } from "../src/planet/planet_service.service";
 import { Planet } from "../src/planet/planet.model";
 import { Coordinates } from "../src/coordinates/coordinates.model";
 
-describe("E2E", () => {
+describe("Planets endpoint", () => {
     let app: INestApplication;
     let server: any;
     beforeEach(async () => {

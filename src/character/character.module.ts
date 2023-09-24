@@ -6,15 +6,14 @@ import { InMemoryRepository } from '../repository/repository.service';
 import { Character } from './character.model';
 import { PLANET_REPOSITORY, PlanetService } from '../planet/planet_service.service';
 import { Planet } from '../planet/planet.model';
+import { PlanetModule } from '../planet/planet.module';
 
 @Module({
-    imports: [],
+    imports: [PlanetModule],
     providers: [
         CharacterResolver,
         CharacterService,
-        PlanetService,
-        { provide: CHARACTER_REPOSITORY, useClass: InMemoryRepository<Character> },
-        { provide: PLANET_REPOSITORY, useClass: InMemoryRepository<Planet>}
+        { provide: CHARACTER_REPOSITORY, useClass: InMemoryRepository<Character> }
     ]
 })
 export class CharacterModule {}

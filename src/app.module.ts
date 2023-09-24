@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { PlanetModule } from './planet/planet.module';
 import { join } from 'path';
+import { CharacterModule } from './character/character.module';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { join } from 'path';
       playground: true,
       path: "/"
     }),
-    PlanetModule
+    CharacterModule
   ]
 })
 export class AppModule {}

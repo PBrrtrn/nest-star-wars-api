@@ -16,12 +16,25 @@ type Planet {
   coordinates: Coordinates!
 }
 
+type Character {
+  id: Float!
+  name: String!
+  species: String!
+  forceSensitivity: Float!
+  currentLocation: Planet!
+}
+
 type Query {
+  characters: [Character!]!
+  character(id: Float!): Character!
   planets: [Planet!]!
   planet(id: Float!): Planet!
 }
 
 type Mutation {
+  createCharacter(name: String!, species: String!, forceSensitivity: Float!, locationId: Float!): Character!
+  updateCharacter(id: Float!, name: String, species: String, forceSensitivity: Float): Character!
+  deleteCharacter(id: Float!): Character!
   createPlanet(name: String!, population: Float!, climate: String!, terrain: String!, latitude: Float!, longitude: Float!): Planet!
   updatePlanet(id: Float!, name: String, population: Float, climate: String, terrain: String, latitude: Float, longitude: Float): Planet!
   deletePlanet(id: Float!): Planet!
