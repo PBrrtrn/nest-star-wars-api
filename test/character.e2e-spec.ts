@@ -89,7 +89,52 @@ describe("Characters endpoint", () => {
             .expect(response => {
                 expect(response.body.data.createCharacter).toStrictEqual(serializedPaulAtreides);
             });
-    })
+
+        await expectCharactersQuery(app, [serializedLukeSkywalker, serializedPaulAtreides]);
+    });
+
+    it("Can update a character by ID", async () => {
+        const expectedUpdatedCharacter = {
+            id: 0,
+            name: "Luke Skywalker",
+            species: "Jedi",
+            forceSensitivity: 0.95,
+            currentLocation: {
+                id: 0,
+                name: "Tatooine"
+            }
+        };
+
+        await request(app.getHttpServer())
+            .post("/")
+            .send({query: `mutation {
+                updateCharacter(
+                    id: 0,
+                    species: "Jedi",
+                    forceSensitivity: 0.95
+                ) { id name species forceSensitivity currentLocation { id name } }
+            }`})
+            .expect(200)
+            .expect(response => {
+                expect(response.body.data.updateCharacter).toStrictEqual(expectedUpdatedCharacter);
+            });
+        
+        await expectCharactersQuery(app, [expectedUpdatedCharacter]);
+    });
+
+    it("Can delete a character by ID", async () => {
+        await request(app.getHttpServer())
+            .post("/")
+            .send({query: `mutation {
+                deleteCharacter(id: 0) { id name species forceSensitivity currentLocation { id name } }
+            }`})
+            .expect(200)
+            .expect(response => {
+                expect(response.body.data.deleteCharacter).toStrictEqual(serializedLukeSkywalker);
+            });
+        
+        await expectCharactersQuery(app, []);
+    });
 });
 
 const populatePlanets = function(planetService: PlanetService) {
