@@ -1,5 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { PLANET_REPOSITORY, PlanetService } from "../../planet/planet_service.service";
+import { PLANET_REPOSITORY, PlanetService } from "../../planet/planet.service";
 import { Fixtures } from "../fixtures";
 
 describe("Planet service", () => {

@@ -1,10 +1,9 @@
 import { Resolver, Query, Args, ResolveField, Parent, Mutation } from "@nestjs/graphql";
 import { Character } from "./character.model";
-import { CharacterService } from "./character_service.service";
-import { PlanetService } from "../planet/planet_service.service";
+import { CharacterService } from "./character.service";
+import { PlanetService } from "../planet/planet.service";
 import { Planet } from "../planet/planet.model";
 
-// TODO: El service está de más, recibir el repositorio de una e indicar acá el token para recibir el repo
 @Resolver((of: Character) => Character)
 export class CharacterResolver {
     constructor(private characterService: CharacterService, private planetService: PlanetService) {}

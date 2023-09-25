@@ -1,10 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { CharacterResolver } from "../../character/character.resolver";
-import { CHARACTER_REPOSITORY, CharacterService } from "../../character/character_service.service";
+import { CHARACTER_REPOSITORY, CharacterService } from "../../character/character.service";
 import { InMemoryRepository } from "../../repository/repository.service";
 import { Character } from "../../character/character.model";
 import { Fixtures } from "../fixtures";
-import { PLANET_REPOSITORY, PlanetService } from "../../planet/planet_service.service";
+import { PLANET_REPOSITORY, PlanetService } from "../../planet/planet.service";
 import { Planet } from "../../planet/planet.model";
 
 describe("Character resolver", () => {

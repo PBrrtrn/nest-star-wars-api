@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Planet } from "../planet/planet.model";
-import { PlanetService } from "./planet_service.service";
+import { PlanetService } from "./planet.service";
 import { Coordinates } from "../coordinates/coordinates.model";
 
 @Resolver((of: Planet) => Planet)

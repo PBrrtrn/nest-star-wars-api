@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PlanetResolver } from "../../planet/planet.resolver";
-import { PLANET_REPOSITORY, PlanetService } from "../../planet/planet_service.service";
+import { PLANET_REPOSITORY, PlanetService } from "../../planet/planet.service";
 import { Planet } from "../../planet/planet.model";
 import { Coordinates } from "../../coordinates/coordinates.model";
 import { Fixtures } from "../fixtures";

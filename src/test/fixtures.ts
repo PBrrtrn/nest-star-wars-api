@@ -10,10 +10,6 @@ export class Fixtures {
         return new Planet(0, "Tatooine", 3000, "Arid", "Desert", this.tatooineCoordinates);
     }
 
-    static naboo(): Planet {
-        return new Planet(1, "Naboo", 15000, "Temperate", "Plains", this.nabooCoordinates);
-    }
-
     static lukeSkywalker(): Character {
         return new Character(0, "Luke Skywalker", "Human", 0.9, this.tatooine());
     }

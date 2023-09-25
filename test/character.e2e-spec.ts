@@ -1,9 +1,9 @@
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "../src/app.module";
-import { PlanetService } from "../src/planet/planet_service.service";
+import { PlanetService } from "../src/planet/planet.service";
 import { Fixtures } from "../src/test/fixtures";
-import { CharacterService } from "../src/character/character_service.service";
+import { CharacterService } from "../src/character/character.service";
 
 import request = require("supertest");
 import { response } from "express";

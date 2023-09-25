@@ -4,7 +4,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import request = require("supertest");
 
 import { AppModule } from "../src/app.module";
-import { PlanetService } from "../src/planet/planet_service.service";
+import { PlanetService } from "../src/planet/planet.service";
 import { Planet } from "../src/planet/planet.model";
 import { Coordinates } from "../src/coordinates/coordinates.model";
 

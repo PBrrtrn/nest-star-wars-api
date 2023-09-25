@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { PlanetService, PLANET_REPOSITORY } from './planet_service.service';
+import { PlanetService, PLANET_REPOSITORY } from './planet.service';
 import { PlanetResolver } from './planet.resolver';
 import { InMemoryRepository } from '../repository/repository.service';
 import { Planet } from './planet.model';
